@@ -1,13 +1,13 @@
-import { reactive } from 'vue';
+// import { reactive } from 'vue';
 
-import questions from '../assets/questions.js';
+// import quizz from '../assets/quizz.js';
 
-export const store = reactive({
+// export const store = reactive({
 
-	questions,
-	points:0,
-	isRight: false,
-	isReponseVisible: false,
-	isClickableChoice: true,
+// 	quizz,
+// 	points:0,
+// 	isRight: false,
+// 	isReponseVisible: false,
+// 	isClickableChoice: true,
 
-})
+// })
