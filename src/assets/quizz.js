@@ -18,4 +18,14 @@ export const quizz = [
 					"XPeke",
 				]
 		},
+		{
+			question: "Quelle équipe est sortie championne du monde de LoL en 2011 ?",
+			reponses: 
+				[
+					"Fnatic (FNC)",
+					"SK Telecom T1 (SKT)",
+					"Against all authority (aAa)",
+					"Team SoloMid (TSM)"
+				]
+		},
 	]
