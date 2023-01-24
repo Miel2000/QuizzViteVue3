@@ -25,3 +25,21 @@ Lorsqu'on arrive à la dernier question
 			On l'affiche
 		Il n'existe pas
 			On affiche le résultat final
+
+5.
+Rendre cliquable une réponse.
+
+	Detecte si Bonne réponse
+		+5pts
+	Detect si Mauvaise réponse
+
+Afficher question suivante
+Quand fini, Afficher résultat
+actualStep à mettre à jour.
+
+6.
+ Lors d'un clique sur une réponse.
+	Colorisé les backgrounds des réponses 
+		Bonne réponse = vert
+		Mauvaise réponse = rouge 
+	

@@ -7,7 +7,8 @@ export const quizz = [
 					"Vi",
 					"Viktor",
 					"Vayne"
-				]
+				],
+			bonneReponse: "Vi"
 		},
 		{
 			question: "Quel joueur est connu pour avoir backdoor en tournant autour du Nexus ennemi sans se faire attraper ?",
@@ -16,7 +17,8 @@ export const quizz = [
 					"Faker",
 					"YellowStar",
 					"XPeke",
-				]
+				],
+			bonneReponse: "XPeke"
 		},
 		{
 			question: "Quelle équipe est sortie championne du monde de LoL en 2011 ?",
@@ -26,6 +28,7 @@ export const quizz = [
 					"SK Telecom T1 (SKT)",
 					"Against all authority (aAa)",
 					"Team SoloMid (TSM)"
-				]
+				],
+			bonneReponse: "SK Telecom T1 (SKT)"
 		},
 	]
