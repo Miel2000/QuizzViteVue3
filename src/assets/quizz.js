@@ -31,4 +31,37 @@ export const quizz = [
 				],
 			bonneReponse: "SK Telecom T1 (SKT)"
 		},
+		{
+			question: "Quel champion est inspiré du jeu 'Assassin's Creed'?",
+			reponses: 
+				[
+					"Rengar",
+					"Talon",
+					"Kennen",
+					"Katarina"
+				],
+			bonneReponse: "Talon"
+		},
+		{
+			question: "De quelle région vient Olaf ?",
+			reponses: 
+				[
+					"Demacia",
+					"Ionia",
+					"Shurima",
+					"Freljord"
+				],
+			bonneReponse: "Freljord"
+		},
+		{
+			question: "Quels champions viennent de Noxus ?",
+			reponses: 
+				[
+					"Leblanc, Katarina, Swain, Darius, Shaco",
+					"Lux, Fiora, Galio, Lucian, Vayne",
+					"Singed, Warwick, Morgana, Twitch, Swain",
+					"Sion, Urgot, Talon, Cassiopeia, Vladimir"
+				],
+			bonneReponse: "Sion, Urgot, Talon, Cassiopeia, Vladimir"
+		},
 	]
