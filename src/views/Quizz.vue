@@ -1,8 +1,10 @@
 <script setup>
 import { quizz } from "../assets/quizz.js";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, inject } from "vue";
 
 import gsap from 'gsap';
+
+const store = inject("STORE");
 
 const actualStep = ref(0);
 const show = ref(false);
@@ -15,21 +17,17 @@ const stateReponseVisibility = ref(true);
 const actualBonneReponse = computed(() => quizz[actualStep.value].bonneReponse )
 const points = ref(0);
 
-// besoin d'un variable qui dit "c'est le début"
-const stepInitiation = ref(false);
-
-
-
+const stepIsInitiated = ref(false);
 
 onMounted(() => {
 	setTimeout(() => {
-		stepInitiation.value = true
+		stepIsInitiated.value = true
 	}, 1000);
 })
 
 function handleClickNextStep() {
 	updateActualStep()
-	stepInitiation.value = false;
+	stepIsInitiated.value = false;
 }
 
 function handleClickReponse(reponse) {
@@ -43,7 +41,7 @@ function handleClickReponse(reponse) {
 function updateActualStep() {
 	colorReponses(false);
 	
-	stepInitiation.value = false;
+	stepIsInitiated.value = false;
 
 	setTimeout(() => {
 
@@ -54,7 +52,7 @@ function updateActualStep() {
 			isResultatVisible.value = true;
 		}
 
-		stepInitiation.value = true;
+		stepIsInitiated.value = true;
 
 	}, 1000);
 }
@@ -62,7 +60,7 @@ function updateActualStep() {
 function verificationReponse(reponse) {
 	if(reponse === actualBonneReponse.value) {
 		console.log("Bien ouéj poto");
-		points.value++
+		store.points += 5
 	} else {
 		console.log('Raté');
 	}
@@ -72,48 +70,66 @@ function colorReponses(stateColorReponse) {
 	isReponseClickedState.value = stateColorReponse;
 }
 
+function onEnter(el, done) {
+	console.log('onEnter: ', el, done)
+  gsap.fromTo(el, 
+	{ opacity: 0,transform:'translateY(20px)', onComplete: done},
+	{ opacity: 1,transform:'translateY(0px)', duration: 1 });
+}
+function onLeave(el, done) {
+	console.log('onLeave: ', el, done)
+  gsap.to(el, 
+	{ opacity: 0,transform:'translateY(20px)', onComplete: done, duration: 1});
+}
+
 
 </script>
 
 <template>
-	<div  v-if="!isResultatVisible" class="quizz-container">
+	<div class="quizz-container">
 
 		<div class="question-container">
 			<Transition name="animquestion">
-				<p v-show="stepInitiation">{{ quizz[actualStep].question }}</p>
+				<p v-show="stepIsInitiated">{{ quizz[actualStep].question }}</p>
 			</Transition>
-
 		</div>
 
-		<div class="reponses-container" v-if="stateReponseVisibility">
-	
-			<div
-				v-for="reponse, index in quizz[actualStep].reponses"
-				class="reponse"
-				@click="handleClickReponse(reponse)"
-				:key="reponse"
+		<div class="reponses-container">
+			<TransitionGroup
+			name="list"
+			tag="span"
+			@enter="onEnter"
+			@leave="onLeave"
 			>
-				{{ reponse }}
-				<span 
-					class="bg-reponse"
-					:class="{ 
-					'bonne-reponse' : reponse === quizz[actualStep].bonneReponse,
-					'mauvaise-reponse' : reponse !== quizz[actualStep].bonneReponse,
-					'active' : isReponseClickedState,
-				}"
+				
+					<p	v-if="stepIsInitiated"
+						v-for="reponse, index in quizz[actualStep].reponses"
+						class="reponse"
+						@click="handleClickReponse(reponse)"
+						:key="reponse"
+					> {{ reponse }} 
+						<span
+							class="bg-reponse"
+							:class="{ 
+							'bonne-reponse' : reponse === quizz[actualStep].bonneReponse,
+							'mauvaise-reponse' : reponse !== quizz[actualStep].bonneReponse,
+							'active' : isReponseClickedState,
+						}"
+						></span>
+					</p>
+				
 
-				></span>
-			</div>
+			</TransitionGroup>
 		</div>
 
-		<button @click="handleClickNextStep">
-			next step
+		<div class="resultat-container">
+			Résultat : {{ store.points }}
+		</div>
+
+		<button class="btn-nextstep" @click="handleClickNextStep">
+			Question suivante
 		</button>
 
-	</div>
-
-	<div v-if="isResultatVisible" class="resultat-container">
-		<h1>RESULTAT</h1>
 	</div>
 </template>
 
@@ -131,46 +147,67 @@ ul {
 	} 
 }
 
-.reponses-container {
-    display: flex;
-	justify-content: space-evenly;
-	align-items: center;
-    height: 200px;
+.question-container {
+	text-align: center;
+	border: 1px solid blue;
+	height: 50px;
 }
-.reponse {
-	position: relative;
 
-}
-.bg-reponse {
-    position: absolute;
-    display: flex;
-    z-index: -5;
-    left: 50%;
-    height: 0%;
-    bottom: 0;
-    background-color: red;
-    transform: translateX(-50%);
-    width: calc(100% + 10px);
-	&.active {
-		transition: height 0.25s;
-		height: 100%;
+.reponses-container {
+	height: 200px;
+
+	span {
+		border: 1px solid blue;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-evenly;
 	}
 }
 
-.bonne-reponse {
-	background-color: green;
+// .reponse {
+// 	position: relative;
+// }
 
+// .bg-reponse {
+// 	position: absolute;
+// 	display: flex;
+// 	z-index: -5;
+// 	left: 50%;
+// 	height: 0%;
+// 	bottom: 0;
+// 	background-color: red;
+// 	transform: translateX(-50%);
+// 	width: calc(100% + 10px);
+// 	&.active {
+// 		// transition: height 0.25s;
+// 		height: 100%;
+// 	}
+// }
+
+// .bonne-reponse {
+// 	background-color: green;
+
+// }
+// .mauvaise-reponse {
+// 	background-color:red;
+// }
+
+.resultat-container {
+	position: absolute;
+	top: 70px;
+	right: 20px;
+	border: solid 1px black;
+	padding:5px;
 }
-.mauvaise-reponse {
-	background-color:red;
+.btn-nextstep {
+	position: absolute;
+	top: 110px;
+	right: 20px;
+	border: solid 1px black;
+	padding:5px;
 }
-
-
 .quizz-container {
-	justify-content: center;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
+	margin: 0 auto;
 }
 
 button {
@@ -180,14 +217,45 @@ button {
 
 // Transitions 
 // QUESTION 
-.animquestion-enter-active,
-.animquestion-leave-active {
-  transition: opacity 0.5s ease;
+
+.animquestion-enter-from {
+	transform:translateY(-20px);
+	opacity:0;
 }
 
-.animquestion-enter-from,
-.animquestion-leave-to {
-  opacity: 0;
+.animquestion-enter-to {
+	opacity:1;
+	transform:translateY(0px);
 }
+
+.animquestion-enter-active, .animquestion-leave-active {
+	transition: transform 0.35s ease-out, opacity 0.50s;
+}
+
+.animquestion-leave-from {
+	opacity: 1;
+	transform:translateY(0px);
+}
+.animquestion-leave-to {
+	transform:translateY(20px);
+	opacity: 0;
+}
+
+
+
+
+
+
+// .list-enter-active,
+// .list-leave-active {
+// 	transition: opacity 1.75s ease;
+// }
+
+// .list-enter-from,
+// .list-leave-to {
+// 	opacity: 0;
+// }
+
+// REPONSE
 
 </style>
