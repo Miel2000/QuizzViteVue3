@@ -71,15 +71,24 @@ function colorReponses(stateColorReponse) {
 }
 
 function onEnter(el, done) {
-	console.log('onEnter: ', el, done)
-  gsap.fromTo(el, 
-	{ opacity: 0,transform:'translateY(20px)', onComplete: done},
-	{ opacity: 1,transform:'translateY(0px)', duration: 1 });
+	gsap.to(el, 
+		{ 
+			opacity: 1,
+			transform:'translateY(0px)',
+			delay:  el.dataset.index   * 0.25,
+			duration: 0.35,
+			onComplete: done
+		});
 }
+
 function onLeave(el, done) {
-	console.log('onLeave: ', el, done)
-  gsap.to(el, 
-	{ opacity: 0,transform:'translateY(20px)', onComplete: done, duration: 1});
+	gsap.to(el,
+		{
+			opacity: 0,
+			transform:'translateY(20px)',
+			onComplete: done,
+			duration: 0.55,
+		});
 }
 
 
@@ -101,24 +110,20 @@ function onLeave(el, done) {
 			@enter="onEnter"
 			@leave="onLeave"
 			>
+				<p	v-if="stepIsInitiated"
+					v-for="reponse, index in quizz[actualStep].reponses"
+					class="reponse"
+					:data-index="index"
+					@click="handleClickReponse(reponse)"
+					:key="reponse"
+					:class="{ 
+						'bonne-reponse' : reponse === quizz[actualStep].bonneReponse,
+						'mauvaise-reponse' : reponse !== quizz[actualStep].bonneReponse,
+						'active' : isReponseClickedState,
+					}"
+				> {{ reponse }} 
 				
-					<p	v-if="stepIsInitiated"
-						v-for="reponse, index in quizz[actualStep].reponses"
-						class="reponse"
-						@click="handleClickReponse(reponse)"
-						:key="reponse"
-					> {{ reponse }} 
-						<span
-							class="bg-reponse"
-							:class="{ 
-							'bonne-reponse' : reponse === quizz[actualStep].bonneReponse,
-							'mauvaise-reponse' : reponse !== quizz[actualStep].bonneReponse,
-							'active' : isReponseClickedState,
-						}"
-						></span>
-					</p>
-				
-
+				</p>
 			</TransitionGroup>
 		</div>
 
@@ -149,52 +154,48 @@ ul {
 
 .question-container {
 	text-align: center;
-	border: 1px solid blue;
+	overflow: hidden;
+	// border: 1px solid blue;
 	height: 50px;
 }
 
 .reponses-container {
-	height: 200px;
+	height: 255px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    border: 1px solid red;
 
 	span {
-		border: 1px solid blue;
+		// border: 1px solid blue;
 		display: flex;
 		flex-direction: row;
 		justify-content: space-evenly;
 	}
 }
 
-// .reponse {
-// 	position: relative;
-// }
+.reponse {
+	border: 1px solid black;
+	transform: translateY(-20px);
+	opacity: 0;
+}
 
-// .bg-reponse {
-// 	position: absolute;
-// 	display: flex;
-// 	z-index: -5;
-// 	left: 50%;
-// 	height: 0%;
-// 	bottom: 0;
-// 	background-color: red;
-// 	transform: translateX(-50%);
-// 	width: calc(100% + 10px);
-// 	&.active {
-// 		// transition: height 0.25s;
-// 		height: 100%;
-// 	}
-// }
 
-// .bonne-reponse {
-// 	background-color: green;
+.bonne-reponse {
+	&.active {
+		background-color: green;
+	}
 
-// }
-// .mauvaise-reponse {
-// 	background-color:red;
-// }
+}
+.mauvaise-reponse {
+	&.active {
+		background-color:red;
+	}
+}
 
 .resultat-container {
 	position: absolute;
-	top: 70px;
+	bottom: 70px;
 	right: 20px;
 	border: solid 1px black;
 	padding:5px;
@@ -219,25 +220,25 @@ button {
 // QUESTION 
 
 .animquestion-enter-from {
-	transform:translateY(-20px);
+	transform:translateX(-20px);
 	opacity:0;
 }
 
 .animquestion-enter-to {
 	opacity:1;
-	transform:translateY(0px);
+	transform:translateX(0px);
 }
 
 .animquestion-enter-active, .animquestion-leave-active {
-	transition: transform 0.35s ease-out, opacity 0.50s;
+	transition: transform 0.35s ease-out, opacity 0.20s;
 }
 
 .animquestion-leave-from {
 	opacity: 1;
-	transform:translateY(0px);
+	transform:translateX(0px);
 }
 .animquestion-leave-to {
-	transform:translateY(20px);
+	transform:translateX(20px);
 	opacity: 0;
 }
 
