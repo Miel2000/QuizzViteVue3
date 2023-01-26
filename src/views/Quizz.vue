@@ -69,7 +69,7 @@ function colorReponses(stateColorReponse) {
 
 function onEnter(el, done) {
 	setTimeout(() => {
-		gsap.to(el, 
+		gsap.to(el,
 			{ 
 				opacity: 1,
 				filter:'blur(0px)',
@@ -81,14 +81,14 @@ function onEnter(el, done) {
 }
 
 function onLeave(el, done) {
-		gsap.to(el,
-			{
-				opacity: 0,
-				filter:'blur(10px)',
-				delay:0.60,
-				onComplete: done,
-				duration: .55,
-			});
+	gsap.to(el,
+		{
+			opacity: 0,
+			filter:'blur(10px)',
+			delay:0.60,
+			onComplete: done,
+			duration: .55,
+		});
 }
 
 
@@ -165,11 +165,13 @@ ul {
 }
 
 .question-container {
-	text-align: center;
-	overflow: hidden;
-	height: 50px;
-	margin: 0 auto;
-	width: 70%;
+    text-align: center;
+    overflow: hidden;
+    display: flex;
+    height: 100px;
+    justify-content: center;
+    flex-direction: column;
+
 	p {
 		font-family: 'Sofia Sans Condensed', sans-serif;
 		&::selection {
@@ -180,7 +182,7 @@ ul {
 }
 
 .reponses-container {
-	height: 255px;
+	height: 180px;
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
@@ -219,18 +221,37 @@ ul {
 	}
 }
 
+@keyframes valideIconAfterAnim {
+	0% {
+		bottom: -20px;
+	}
+
+	35%{
+		bottom: -25px;
+	}
+	55%{
+		bottom: -25px;
+	}
+
+	100% {
+		bottom: -45px;
+	}
+}
+
+
 
 .bonne-reponse {
 	transition:color 0.25s;
 	&::after {
 			content:"✓";
 			opacity: 0;
-			transition: bottom 1s, opacity 1s;
+			transition: bottom  .5s, opacity 1s;
 			position: absolute;
-			bottom: -15px;
+			bottom: -25px;
 			left:50%;
 			font-weight: bold;
-			transform:translate(-50%);
+			transform:translateX(-50%);
+			
 		}
 	&.active {
 		color: #20a520fd;
@@ -239,10 +260,11 @@ ul {
 			content:"✓";
 			opacity: 1;
 			position: absolute;
-			bottom: -25px;
 			left:50%;
 			font-weight: bold;
-			transform:translate(-50%);
+			animation: valideIconAfterAnim 1.8s forwards;
+			
+			transform:translateX(-50%);
 		}
 	}
 
@@ -323,4 +345,31 @@ button {
 }
 
 
+
+@media (max-width: 650px) {
+  
+ .quizz-container {
+	height: -webkit-fill-available;
+	background: inherit;
+    box-shadow: inherit;
+ }
+
+ .reponses-container {
+	height: 255px;
+    margin: 5vh 2vh;
+    justify-content: center;
+    flex-direction: column;
+    overflow: inherit;
+	display: inherit;
+	span {
+		
+		flex-direction: column;
+	}
+
+	.reponse {
+		margin: 25px 0;
+	}
+ }
+  
+}
 </style>

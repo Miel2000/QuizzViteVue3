@@ -6,7 +6,7 @@ export const quizz = [
 					"Rammus",
 					"Vi",
 					"Viktor",
-					"Vayne"
+					"Vayne",
 				],
 			bonneReponse: "Vi"
 		},
