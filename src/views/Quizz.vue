@@ -1,6 +1,7 @@
 <script setup>
 import { quizz } from "../assets/quizz.js";
 import { computed, onMounted, ref, inject } from "vue";
+import Reponse from "../components/Reponse.vue";
 
 import gsap from 'gsap';
 
@@ -27,6 +28,7 @@ function handleClickNextStep() {
 
 function handleClickReponse(reponse) {
 	isClickEnabeled.value = true;
+	store.isReponseVisible = true;
 	verificationReponse(reponse)
 	colorReponses(true)
 	setTimeout(() => {
@@ -50,15 +52,19 @@ function updateActualStep() {
 		}
 
 		stepIsInitiated.value = true;
+		store.isReponseVisible = false;
 
 	}, 1000);
 }
 
 function verificationReponse(reponse) {
+	store.storedGoodAnswer = actualBonneReponse.value;
 	if(reponse === actualBonneReponse.value) {
 		console.log("Bien ouéj poto");
+		store.isRight = true;
 		store.points += 5
 	} else {
+		store.isRight = false;
 		console.log('Raté');
 	}
 }
@@ -126,6 +132,7 @@ function onLeave(el, done) {
 				</p>
 			</TransitionGroup>
 		</div>
+		<Reponse />
 
 		<div class="resultat-container">
 			Résultat : {{ store.points }}
