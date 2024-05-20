@@ -29,9 +29,9 @@ Lorsqu'on arrive à la dernier question
 5
 Rendre cliquable une réponse en utilisant function nextStep
 
-	Detecter si Bonne réponse
-		+5pts
-	Detecter si Mauvaise réponse
+Detecter si Bonne réponse
+	+5pts
+Detecter si Mauvaise réponse
 
 Afficher question suivante
 Quand fini, Afficher résultat + iteration score 
