@@ -8,9 +8,10 @@ import Choix from "../components/Choix.vue";
 
 const store = inject("STORE");
 
-
-const isResultatVisible = ref(false);
-
+const firstStepTimeout = 200;
+const betweenTwoStepTimeout = 900;
+const switchActualStepTimeout = 1000;
+const startNextStep = 1200;
 
 
 const actualBonneReponse = computed(() => quizz[store.actualStep].bonneReponse )
@@ -18,43 +19,41 @@ const actualBonneReponse = computed(() => quizz[store.actualStep].bonneReponse )
 onMounted(() => {
 	setTimeout(() => {
 		store.stepIsInitiated = true
-	}, 1000);
+	}, firstStepTimeout);
 })
 
 function handleClickNextStep() {
-	updateActualStep()
 	store.stepIsInitiated = false;
+	updateActualStep()
 }
 
 function handleClickReponse(reponse) {
 	store.isClickEnabeled = true;
 	store.isReponseVisible = true;
+	store.stepIsInitiated = true;
 	verificationReponse(reponse)
 	colorChoixWhenClicked(true)
 	setTimeout(() => {
 		handleClickNextStep();
-		store.isClickEnabeled = false;
-	}, 1000);
+	}, betweenTwoStepTimeout);
 }
 
 function updateActualStep() {
 	colorChoixWhenClicked(false);
-	
-	store.stepIsInitiated = false;
-
 	setTimeout(() => {
-
+		
 		if(store.actualStep < quizz.length - 1) {
 			store.actualStep++
-
 		}  else {
 			store.actualStep = 0;
 		}
+	}, switchActualStepTimeout);
+	
 
+	setTimeout(() => {
 		store.stepIsInitiated = true;
 		store.isReponseVisible = false;
-
-	}, 1000);
+	}, startNextStep);
 }
 
 function verificationReponse(reponse) {
@@ -80,8 +79,6 @@ function colorChoixWhenClicked(stateColorReponse) {
 <template>
 	<div class="quizz-container">
 
-
-			
 		<Question />
 
 		<Choix @handle-click-reponse="handleClickReponse"/>
@@ -100,7 +97,6 @@ function colorChoixWhenClicked(stateColorReponse) {
 </template>
 
 <style lang="scss" scoped>
-
 
 
 
@@ -137,9 +133,6 @@ button {
 	margin: 0 auto;
 }
 
-.disabel-click {
-	pointer-events: none;
-}
 
 
 @media (max-width: 650px) {

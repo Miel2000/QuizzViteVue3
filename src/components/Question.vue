@@ -3,7 +3,7 @@ import { inject, ref, computed } from 'vue';
 
 const store = inject("STORE");
 
-const actualQuestion = computed(() => store.quizz[store.actualStep].question )
+const actualQuestion = computed(() => store.quizz[store.actualStep].question)
 console.log("actualQuestion", actualQuestion.value)
 </script>
 

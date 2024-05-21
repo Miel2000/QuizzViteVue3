@@ -5,18 +5,16 @@ import gsap from 'gsap';
 
 const store = inject("STORE");
 
-const viewStateStep = ref(0)
-
-console.log(store.quizz[viewStateStep.value].reponses)
  
 function onEnter(el, done) {
 	console.log(el)
+	gsap.set(el, { opacity: 0, filter: 'blur(10px)' });
 	gsap.to(el,
 		{ 
 			opacity: 1,
 			filter:'blur(0px)',
 			delay:  el.dataset.index   * 0.25,
-			duration: 0.25,
+			duration: 0.55,
 			onComplete: done
 		});
 }
@@ -45,6 +43,7 @@ function onLeave(el, done) {
 				@leave="onLeave"
 			>
 				<p	
+					v-if="store.stepIsInitiated"
 					v-for="reponse, index in store.quizz[store.actualStep].reponses"
 					class="reponse"
 					:data-index="index"
@@ -53,8 +52,7 @@ function onLeave(el, done) {
 					:class="{
 						'bonne-reponse' : reponse === store.quizz[store.actualStep].bonneReponse,
 						'mauvaise-reponse' : reponse !== store.quizz[store.actualStep].bonneReponse,
-						'active' : store.isReponseClickedState,
-						'disabel-click': store.isClickEnabeled
+						'actived' : store.isReponseClickedState,
 					}"
 				> {{ reponse }} 
 				</p>
@@ -68,6 +66,9 @@ function onLeave(el, done) {
 
 @import '../style.scss';
 
+.disabel-click {
+	pointer-events: none;
+}
 
 
 .choix-container {
@@ -107,7 +108,7 @@ function onLeave(el, done) {
 		border: 0.5px solid #0cb9ba;
 	}
 
-	&:active {
+	&:actived {
 		box-shadow: 20px 20px 60px #808080b8, -20px -20px 60px #ffffff;
 	}
 }
@@ -125,7 +126,7 @@ function onLeave(el, done) {
 			transform:translateX(-50%);
 			
 		}
-	&.active {
+	&.actived {
 		color: #20a520fd;
 		border: 0.5px solid #20a520fd;
 		&::after {
@@ -148,11 +149,11 @@ function onLeave(el, done) {
 		opacity:0;
 		transition: opacity 1s, bottom 0.55s;
 		position: absolute;
-		bottom: -15px;
+		bottom: -30px;
 		left:50%;
 		transform:translate(-50%);
 	}
-	&.active {
+	&.actived {
 		color:  #c42020c0;
 		border: 0.5px solid #c42020c0;
 		&::after {

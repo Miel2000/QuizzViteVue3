@@ -10,7 +10,7 @@ export const store = reactive({
 	isReponseVisible: true,
 	isClickableChoice: true,
 	storedGoodAnswer: "",
-	stepIsInitiated: true,
+	stepIsInitiated: false,
 	isReponseClickedState: false,
 	isClickEnabeled: false,
 });
