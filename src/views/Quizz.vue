@@ -23,7 +23,7 @@ onMounted(() => {
 	}, firstStepTimeout);
 })
 
-function handleClickNextStep() {
+function clickNextStepBtn() {
 	
 	store.isClickEnabeled = true;
 	
@@ -38,15 +38,18 @@ function handleClickReponse(reponse) {
 	store.isClickEnabeled = true;
 	store.isReponseVisible = true;
 	store.stepIsInitiated = true;
+
 	verificationReponse(reponse)
-	colorChoixWhenClicked(true)
+
+	activeBorderColorChoices(true)
+
 	setTimeout(() => {
-		handleClickNextStep();
+		clickNextStepBtn();
 	}, betweenTwoStepTimeout);
 }
 
 function updateActualStep() {
-	colorChoixWhenClicked(false);
+	activeBorderColorChoices(false);
 	setTimeout(() => {
 		
 		if(store.actualStep < quizz.length - 1) {
@@ -76,14 +79,9 @@ function verificationReponse(reponse) {
 	}
 }
 
-function colorChoixWhenClicked(stateColorReponse) {
+function activeBorderColorChoices(stateColorReponse) {
 	store.isReponseClickedState = stateColorReponse;
 }
-
-
-
-
-
 
 </script>
 
@@ -104,9 +102,10 @@ function colorChoixWhenClicked(stateColorReponse) {
 				class="btn-nextstep"
 				:class="{
 					'disabel-click' : store.isClickEnabeled,
+					'loading' : store.isClickEnabeled,
 				}" 
-				@click="handleClickNextStep">
-				Question suivante
+				@click="clickNextStepBtn">
+				{{  store.isClickEnabeled ? "Loading..." : "Question suivante " }}
 			</button>
 		</div>
 
@@ -138,18 +137,27 @@ function colorChoixWhenClicked(stateColorReponse) {
 	border: solid 1px black;
 	padding:5px;
 }
-.btn-nextstep {
-	cursor: pointer;
-	position: absolute;
-	top: 110px;
-	right: 20px;
-	border: solid 1px black;
-	padding:5px;
-}
 
-button {
-	width: fit-content;
-	margin: 0 auto;
+.debug-container {
+
+	.btn-nextstep {
+		cursor: pointer;
+		position: absolute;
+		top: 110px;
+		right: 20px;
+		border: solid 1px black;
+		padding:5px;
+	}
+	
+	.loading {
+		opacity: 0.5;
+		// border: red 1px solid;
+	}
+	
+	button {
+		width: fit-content;
+		margin: 0 auto;
+	}
 }
 
 
