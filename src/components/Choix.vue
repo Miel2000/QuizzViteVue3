@@ -1,127 +1,191 @@
 <script setup>
 
-import { onMounted, ref, inject } from 'vue';
-//  CE COMPOSANT REçOIT LES QUESTIONS D'UNE SEQUENCE
-
-const backgroundSpan = ref('');
-const isClickableChoice = ref(false);
+import { ref, watch , inject, computed } from 'vue';
+import gsap from 'gsap';
 
 const store = inject("STORE");
 
-function validateChoice(reponse) {
+const viewStateStep = ref(0)
 
-	console.log(reponse);
-	displaySpanBg();
-	stockResult(reponse);
-	empecherClickChoix();
-	displayResponse();
+console.log(store.quizz[viewStateStep.value].reponses)
+ 
+function onEnter(el, done) {
+	console.log(el)
+	gsap.to(el,
+		{ 
+			opacity: 1,
+			filter:'blur(0px)',
+			delay:  el.dataset.index   * 0.25,
+			duration: 0.25,
+			onComplete: done
+		});
 }
 
-function displaySpanBg() {
-	backgroundSpan.value = "active"
+function onLeave(el, done) {
+	gsap.to(el,
+		{
+			opacity: 0,
+			filter:'blur(10px)',
+			delay: 0.60,
+			duration: .60,
+			onComplete: done,
+		});
 }
 
-function stockResult(result) {
-	if(result.goodAnswer === "true") {
-		store.points += 5;
-		store.isRight = true;
-	}
-
-	console.log(store.points)
-}
-
-function empecherClickChoix() {
-	isClickableChoice.value = true;
-}
-
-function displayResponse() {
-	store.isReponseVisible = true;
-}
 
 </script>
 
 <template>
-	<h1>{{store.points}}</h1>
-	<div  class="choix-container">
-		<p v-for="rep in store.questions.quizzlol.sequence1.choix"
-			class="choix"
-			@click="validateChoice(rep)"
-			:class="{ 'disable-click' : isClickableChoice }"
-			:key="rep.id"
-			:data-right="rep.goodAnswer"
-		> 
-			{{rep.text}}
-			
-			<span  class="validation-bg" :class="[rep.goodAnswer, backgroundSpan]" ></span>
-		</p>
-	</div>
-
+	<div class="choix-container">
+		
+			<TransitionGroup
+				name="list"
+				tag="span"
+				@enter="onEnter"
+				@leave="onLeave"
+			>
+				<p	
+					v-for="reponse, index in store.quizz[store.actualStep].reponses"
+					class="reponse"
+					:data-index="index"
+					@click="$emit('handleClickReponse', reponse)"
+					:key="reponse"
+					:class="{
+						'bonne-reponse' : reponse === store.quizz[store.actualStep].bonneReponse,
+						'mauvaise-reponse' : reponse !== store.quizz[store.actualStep].bonneReponse,
+						'active' : store.isReponseClickedState,
+						'disabel-click': store.isClickEnabeled
+					}"
+				> {{ reponse }} 
+				</p>
+			</TransitionGroup>
+		</div> 
+		
 </template>
 
 
 <style lang="scss" scoped>
 
-	@import '../style.scss';
+@import '../style.scss';
 
-	.choix-container {
-		height: fit-content;
-		align-items: center;
+
+
+.choix-container {
+	height: 180px;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	overflow: hidden;
+
+
+	span {
 		display: flex;
 		flex-direction: row;
 		justify-content: space-evenly;
+		margin: 0 auto;
+		width: 90%;
 	}
+}
 
-	.disable-click {
-		pointer-events: none;
-	}
-
-	.validation-bg  {
-		position: absolute;
-		width: 100%;
-		background-color: rgb(162 231 63 / 30%);
-		height: 0%;
-		bottom:0;
-		transition: height 0.70s 0.25s;
-
-		&.true {
-			background-color: rgb(162 231 63 / 30%);
-		}
-
-		&.false {
-			background-color: #eb45456b;
-		}
-
-		&.active {
-			height: 100%;
-		}
-	}
-
-
-
-	.choix {
-		position: relative;
-		width: 20%;
-		height: 100px;
-		flex-direction: column;
-		display: flex;
-		cursor: pointer;
-		justify-content: center;
-		margin: 2em auto;
-		transition: box-shadow 0.25s ease-out;
-		box-shadow:   -15px 0 0 0 rgb(63, 142, 231),
-						15px 0 0 0 rgb(63, 142, 231),
-						0 -15px 0 0 rgb(63, 142, 231),
-						0 15px 0 0 rgb(63, 142, 231);
-
-		&:hover {
-			box-shadow:   -5px 0 0 0 rgba(98, 214, 82, 0.438),
-						5px 0 0 0 rgba(98, 214, 82, 0.438),
-						0 -5px 0 0 rgba(98, 214, 82, 0.438),
-						0 5px 0 0 rgba(98, 214, 82, 0.438);
-		}
-
+.reponse {
+	min-width: 20%;
+	text-align: center;
+	font-family: 'Sofia Sans Condensed', sans-serif;
+	font-weight: 400;
+	font-size: 16px;
+	border-radius: 50px;
+	transform: translateY(-20px);
+	opacity: 1;
+	padding: 10px;
+	border: 0.5px solid #ffffff52;
+    cursor: pointer;
+	background: linear-gradient(170deg, #cacaca42  35%, #f0f0f0);
+    box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
 	
+	&:hover {
+		transition: border 0.5s;
+		border: 0.5px solid #0cb9ba;
 	}
+
+	&:active {
+		box-shadow: 20px 20px 60px #808080b8, -20px -20px 60px #ffffff;
+	}
+}
+
+.bonne-reponse {
+	transition:color 0.25s;
+	&::after {
+			content:"✓";
+			opacity: 0;
+			transition: bottom  .5s, opacity 1s;
+			position: absolute;
+			bottom: -25px;
+			left:50%;
+			font-weight: bold;
+			transform:translateX(-50%);
+			
+		}
+	&.active {
+		color: #20a520fd;
+		border: 0.5px solid #20a520fd;
+		&::after {
+			content:"✓";
+			opacity: 1;
+			position: absolute;
+			left:50%;
+			font-weight: bold;
+			animation: valideIconAfterAnim 1.8s forwards;
+			
+			transform:translateX(-50%);
+		}
+	}
+
+}
+.mauvaise-reponse {
+	transition: color 0.25s;
+	&:after {
+		content:"✕";
+		opacity:0;
+		transition: opacity 1s, bottom 0.55s;
+		position: absolute;
+		bottom: -15px;
+		left:50%;
+		transform:translate(-50%);
+	}
+	&.active {
+		color:  #c42020c0;
+		border: 0.5px solid #c42020c0;
+		&::after {
+			content:"✕";
+			opacity:1;
+			position: absolute;
+			bottom: -25px;
+			left:50%;
+			transform:translate(-50%);
+		}
+	}
+}
+
+
+
+@keyframes valideIconAfterAnim {
+	0% {
+		bottom: -20px;
+	}
+
+	35%{
+		bottom: -25px;
+	}
+	55%{
+		bottom: -25px;
+	}
+
+	100% {
+		bottom: -45px;
+	}
+}
+
+
 
 
 	@media (max-width: $mobile) {

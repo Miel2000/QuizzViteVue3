@@ -1,7 +1,6 @@
 <script setup>
-import { onMounted, ref, inject } from 'vue';
-// let isRight = ref(true);
-// let isReponseVisible = ref(true);
+import { inject } from 'vue';
+
 const store = inject("STORE");
 
 </script>
@@ -16,9 +15,9 @@ const store = inject("STORE");
 
 					<p v-else class="answer isfalse">
 						Raté, la bonne réponse été :
-						<strong class="isright">
+						<span class="isright">
 							{{ store.storedGoodAnswer }}
-						</strong> 
+						</span> 
 					</p>
 				</div>
 		</Transition>
@@ -40,7 +39,8 @@ const store = inject("STORE");
 	}
 	.isfalse {
 		color: #c42020c0;
-		strong {
+		span {
+			letter-spacing: 2px;
 			font-size: 21px;
 		}
 	}
