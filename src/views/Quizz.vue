@@ -11,7 +11,8 @@ const store = inject("STORE");
 const firstStepTimeout = 200;
 const betweenTwoStepTimeout = 900;
 const switchActualStepTimeout = 1000;
-const startNextStep = 1200;
+const startNextStepTimeout = 1200;
+const clickNextStepBtnTimeout = 500;
 
 
 const actualBonneReponse = computed(() => quizz[store.actualStep].bonneReponse )
@@ -23,8 +24,14 @@ onMounted(() => {
 })
 
 function handleClickNextStep() {
-	store.stepIsInitiated = false;
-	updateActualStep()
+	
+	store.isClickEnabeled = true;
+	
+	setTimeout(() => {
+		store.stepIsInitiated = false;
+		
+		updateActualStep()
+	}, clickNextStepBtnTimeout);
 }
 
 function handleClickReponse(reponse) {
@@ -53,7 +60,8 @@ function updateActualStep() {
 	setTimeout(() => {
 		store.stepIsInitiated = true;
 		store.isReponseVisible = false;
-	}, startNextStep);
+		store.isClickEnabeled = false;
+	}, startNextStepTimeout);
 }
 
 function verificationReponse(reponse) {
@@ -74,6 +82,9 @@ function colorChoixWhenClicked(stateColorReponse) {
 
 
 
+
+
+
 </script>
 
 <template>
@@ -82,23 +93,31 @@ function colorChoixWhenClicked(stateColorReponse) {
 		<Question />
 
 		<Choix @handle-click-reponse="handleClickReponse"/>
-	
+
 		<Resultat />
 
 		<div class="score-container">
 			Résultat : {{ store.points }}
 		</div>
-
-		<button class="btn-nextstep" @click="handleClickNextStep">
-			Question suivante
-		</button>
+		<div class="debug-container">
+			<button 
+				class="btn-nextstep"
+				:class="{
+					'disabel-click' : store.isClickEnabeled,
+				}" 
+				@click="handleClickNextStep">
+				Question suivante
+			</button>
+		</div>
 
 	</div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss" >
 
-
+.disabel-click {
+	pointer-events: none;
+}
 
 .quizz-container {
 	margin: 10% auto;
@@ -112,7 +131,6 @@ function colorChoixWhenClicked(stateColorReponse) {
 }
 
 
-
 .score-container {
 	position: absolute;
 	bottom: 70px;
@@ -121,6 +139,7 @@ function colorChoixWhenClicked(stateColorReponse) {
 	padding:5px;
 }
 .btn-nextstep {
+	cursor: pointer;
 	position: absolute;
 	top: 110px;
 	right: 20px;

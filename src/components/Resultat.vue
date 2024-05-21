@@ -26,7 +26,7 @@ const store = inject("STORE");
   
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 
 .answer-state-container {
 	width: 100%;
@@ -45,8 +45,6 @@ const store = inject("STORE");
 		}
 	}
 }
-
-
 
 
 .answer-enter-from {

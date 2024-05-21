@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, watch , inject, computed } from 'vue';
+import { inject } from 'vue';
 import gsap from 'gsap';
 
 const store = inject("STORE");
@@ -15,7 +15,9 @@ function onEnter(el, done) {
 			filter:'blur(0px)',
 			delay:  el.dataset.index   * 0.25,
 			duration: 0.55,
-			onComplete: done
+			onComplete: () => {
+				done();
+			}
 		});
 }
 
@@ -26,7 +28,9 @@ function onLeave(el, done) {
 			filter:'blur(10px)',
 			delay: 0.60,
 			duration: .60,
-			onComplete: done,
+			onComplete: () => {
+				done();
+			},
 		});
 }
 
@@ -53,6 +57,7 @@ function onLeave(el, done) {
 						'bonne-reponse' : reponse === store.quizz[store.actualStep].bonneReponse,
 						'mauvaise-reponse' : reponse !== store.quizz[store.actualStep].bonneReponse,
 						'actived' : store.isReponseClickedState,
+						'disabel-click' : store.isClickEnabeled,
 					}"
 				> {{ reponse }} 
 				</p>
@@ -65,10 +70,6 @@ function onLeave(el, done) {
 <style lang="scss" scoped>
 
 @import '../style.scss';
-
-.disabel-click {
-	pointer-events: none;
-}
 
 
 .choix-container {

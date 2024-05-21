@@ -1,10 +1,9 @@
 <script setup>
-import { inject, ref, computed } from 'vue';
+import { inject, computed } from 'vue';
 
 const store = inject("STORE");
 
 const actualQuestion = computed(() => store.quizz[store.actualStep].question)
-console.log("actualQuestion", actualQuestion.value)
 </script>
 
 <template>
