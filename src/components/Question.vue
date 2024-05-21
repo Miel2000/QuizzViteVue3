@@ -26,6 +26,7 @@ const actualQuestion = computed(() => store.quizz[store.actualStep].question)
 
 	p {
 		font-family: 'Sofia Sans Condensed', sans-serif;
+		font-size: 21px;
 		&::selection {
 			color:red;
 			background-color:transparent;

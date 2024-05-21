@@ -95,7 +95,7 @@ function activeBorderColorChoices(stateColorReponse) {
 		<Resultat />
 
 		<div class="score-container">
-			Résultat : {{ store.points }}
+			Score : {{ store.points }} Pts
 		</div>
 		<div class="debug-container">
 			<button 
